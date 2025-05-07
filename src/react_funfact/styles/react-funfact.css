@@ -1,0 +1,21 @@
+.funfact-container {
+    margin: 7px 7px 0 0;
+    padding: 30px 25px;
+    background: #21222A;
+    background-image: url(/src/react_funfact/assets/react-half-logo.png);
+    padding: 60px 30px;
+    background-repeat: no-repeat;
+    background-position: right 10%;
+}
+
+.funfact-title {
+    color: White;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.funfact-item {
+    font-size: 1.2rem;
+    color: White;
+    font-weight: 400;
+}
