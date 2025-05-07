@@ -1,14 +1,13 @@
 import './App.css'
-import ReactFact from "./react_funfact/components/ReactFunFacts.jsx"
-import MainContentBody from "./main_contents/components/MainContentBody.jsx";
-import TravelJourney from "./travel_journal/components/TravelJourney.jsx";
+import ChefClaude from "./chef/components/ChefClaude.jsx";
 
 function App() {
   return (
     <>
         {/*<MainContentBody/>*/}
         {/*<ReactFact/>*/}
-        <TravelJourney/>
+        {/*<TravelJourney/>*/}
+        <ChefClaude/>
     </>
   )
 }
