@@ -1,5 +1,6 @@
 import './App.css'
 import ChefClaude from "./chef/components/ChefClaude.jsx";
+import FormAction from "./form_action/components/Form-Action.jsx";
 
 function App() {
   return (
@@ -7,7 +8,8 @@ function App() {
         {/*<MainContentBody/>*/}
         {/*<ReactFact/>*/}
         {/*<TravelJourney/>*/}
-        <ChefClaude/>
+        {/*<ChefClaude/>*/}
+        <FormAction/>
     </>
   )
 }
