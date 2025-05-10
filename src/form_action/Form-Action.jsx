@@ -1,4 +1,4 @@
-import "../styles/form-action.css"
+import "./styles/form-action.css"
 
 export default function FormAction() {
 

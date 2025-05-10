@@ -1,4 +1,4 @@
-export default function MainContent() {
+export default function MainBody() {
     return (
         <main>
             <h1>Reasons I'm excited to learn React</h1>

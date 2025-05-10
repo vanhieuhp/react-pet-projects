@@ -1,7 +1,7 @@
-import Header from "./Header.jsx";
-import Entry from "./Entry.jsx";
-import "../styles/travel-jouney.css";
-import data from "../assets/data.js";
+import Header from "./components/Header.jsx";
+import Entry from "./components/Entry.jsx";
+import "./styles/travel-jouney.css";
+import data from "./assets/data.js";
 
 export default function TravelJourney() {
 
