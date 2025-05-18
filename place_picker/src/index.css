@@ -198,7 +198,7 @@ header p {
 
 .modal {
   min-width: 30rem;;
-  padding: 0;
+  padding: 20px;
   z-index: 2;
   background: #d5c7bc;
   border-radius: 8px;
