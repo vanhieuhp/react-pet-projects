@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useRef, useState} from 'react';
+import {useCallback, useRef, useState} from 'react';
 
 import Places from './components/Places.jsx';
 import Modal from './components/Modal.jsx';
@@ -7,31 +7,20 @@ import logoImg from './assets/logo.png';
 import AvailablePlaces from "./components/AvailablePlaces.jsx";
 import {fetchUserPlaces, updateUserPlaces} from "../http.js";
 import ErrorPage from "./components/ErrorPage.jsx";
+import {useFetch} from "./hooks/useFetch.js";
 
 function App() {
     const selectedPlace = useRef();
-    const [isFetching, setIsFetching] = useState(false);
-    const [error, setError] = useState();
 
     const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [pickedPlaces, setPickedPlaces] = useState([]);
     const [errorUpdatePlaces, setErrorUpdatePlaces] = useState();
 
-    useEffect(() => {
-        async function fetchPlaces() {
-            setIsFetching(true);
-            try {
-                const places = await fetchUserPlaces();
-                setPickedPlaces(places);
-            } catch (error) {
-                setError({message: error.message || "Failed to fetch user places."});
-            }
-
-            setIsFetching(false);
-        }
-
-        fetchPlaces();
-    }, []);
+    const {
+        isFetching,
+        error,
+        fetchedData: userPlaces,
+        setFetchedData: setUserPlaces
+    } = useFetch(fetchUserPlaces, []);
 
     function handleStartRemovePlace(id) {
         setModalIsOpen(true);
@@ -43,7 +32,7 @@ function App() {
     }
 
     async function handleSelectPlace(selectedPlace) {
-        setPickedPlaces((prevPickedPlaces) => {
+        setUserPlaces((prevPickedPlaces) => {
             if (!prevPickedPlaces) {
                 prevPickedPlaces = []
             }
@@ -54,30 +43,30 @@ function App() {
         });
 
         try {
-            await updateUserPlaces([selectedPlace, ...pickedPlaces]);
+            await updateUserPlaces([selectedPlace, ...userPlaces]);
         } catch (error) {
-            setPickedPlaces(pickedPlaces);
+            setUserPlaces(userPlaces);
             setErrorUpdatePlaces({message: error.message || "Failed to update places."})
         }
     }
 
     const handleRemovePlace = useCallback(
         async function handleRemovePlace() {
-            setPickedPlaces((prevPickedPlaces) =>
+            setUserPlaces((prevPickedPlaces) =>
                 prevPickedPlaces.filter((place) => place.id !== selectedPlace.current.id)
             );
 
             try {
                 await updateUserPlaces(
-                    pickedPlaces.filter((place) => place.id !== selectedPlace.current.id)
+                    userPlaces.filter((place) => place.id !== selectedPlace.current.id)
                 );
             } catch (error) {
-                setPickedPlaces(pickedPlaces);
+                setUserPlaces(userPlaces);
                 setErrorUpdatePlaces({message: error.message || "Fail to delete place!"})
             }
 
             setModalIsOpen(false);
-        }, [pickedPlaces]);
+        }, [userPlaces, setUserPlaces]);
 
     function handleError() {
         setErrorUpdatePlaces(null);
@@ -113,12 +102,14 @@ function App() {
                 <Places
                     title="I'd like to visit ..."
                     fallbackText={'Select the places you would like to visit below.'}
-                    places={pickedPlaces}
+                    places={userPlaces}
                     isLoading={isFetching}
                     loadingText="Fetching your places..."
                     onSelectPlace={handleStartRemovePlace}
                 />
-                <AvailablePlaces onSelectPlace={handleSelectPlace}/>
+                <AvailablePlaces
+                    onSelectPlace={handleSelectPlace}
+                />
             </main>
         </>
     );
