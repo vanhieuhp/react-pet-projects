@@ -12,7 +12,7 @@ Here's a list of all available projects:
 4. [Core Concepts](./core_concepts/README.md) - Basic React concepts and examples
 5. [Countdown Game](./countdown_game/README.md) - Timer-based game implementation
 6. [Investment Calculator](./investment_calculator/README.md) - Financial calculation tool
-7. [Login Form](./login_form/README.md) - Authentication form implementation
+7. [StateLogin Form](./login_form/README.md) - Authentication form implementation
 8. [Management Project](./management_project/README.md) - Project management application
 9. [React Quiz](./react_quiz/README.md) - Interactive quiz application
 
@@ -76,7 +76,7 @@ Each project supports the following npm scripts:
 For beginners, we recommend following this order:
 
 1. Start with [Core Concepts](./core_concepts/README.md) to learn the basics
-2. Move to [Login Form](./login_form/README.md) for form handling
+2. Move to [StateLogin Form](./login_form/README.md) for form handling
 3. Try [Tic Tac Toe Game](./tic_tac_toe_game/README.md) for state management
 4. Explore [Place Picker](./place_picker/README.md) for advanced features
 5. Continue with other projects based on your interests
