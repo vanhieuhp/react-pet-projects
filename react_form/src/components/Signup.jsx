@@ -1,123 +1,198 @@
-import {useState} from "react";
+import { useActionState } from 'react';
+
+import { hasMinLength, isEmail, isEqualsToOtherValue, isNotEmpty } from '../util/validation.js';
 
 export default function Signup() {
+	function signupAction(prevFormState, formData) {
+		const email = formData.get('email');
+		const password = formData.get('password');
+		const confirmPassword = formData.get('confirm-password');
+		const firstName = formData.get('first-name');
+		const lastName = formData.get('last-name');
+		const role = formData.get('role');
+		const terms = formData.get('terms');
+		const acquisitionChannel = formData.getAll('acquisition');
 
-    const [passwordAreNotEqual, setPasswordAreNotEqual] = useState(false);
+		let errors = [];
 
-    function handleSubmit(event) {
-        event.preventDefault();
+		if (!isEmail(email)) {
+			errors.push('Please enter a valid email address.');
+		}
 
-         const fd = new FormData(event.target);
-         const acquisitionChannel = fd.getAll("acquisition");
-         const data = Object.fromEntries(fd);
-         data.acquisition = acquisitionChannel;
+		if (!isNotEmpty(password) || !hasMinLength(password, 6)) {
+			errors.push('You must provide a password with at least 6 characters.');
+		}
 
-         if (data.password !== data['confirm-password']) {
-             setPasswordAreNotEqual(true);
-            return;
-         }
+		if (!isEqualsToOtherValue(password, confirmPassword)) {
+			errors.push('Passwords do not match.');
+		}
 
-        console.log(data);
-    }
+		if (!isNotEmpty(firstName) || !isNotEmpty(lastName)) {
+			errors.push('Please provide both your first and last name.');
+		}
 
-    return (
-        <form onSubmit={handleSubmit}>
-            <h2>Welcome on board!</h2>
-            <p>We just need a little bit of data from you to get you started 🚀</p>
+		if (!isNotEmpty(role)) {
+			errors.push('Please select your role.');
+		}
 
-            <div className="control">
-                <label htmlFor="email">Email</label>
-                <input id="email" type="email" name="email" required/>
-            </div>
+		if (!terms) {
+			errors.push('Please accept the terms and conditions.');
+		}
 
-            <div className="control-row">
-                <div className="control">
-                    <label htmlFor="password">Password</label>
-                    <input id="password" type="password" name="password" required/>
-                </div>
+		if (acquisitionChannel.length === 0) {
+			errors.push('Please select at least one acquisition channel.');
+		}
 
-                <div className="control">
-                    <label htmlFor="confirm-password">Confirm Password</label>
-                    <input
-                        id="confirm-password"
-                        type="password"
-                        name="confirm-password"
-                        required
-                    />
-                    <div className="control-error">
-                        {passwordAreNotEqual && <p>Passwords must match.</p>}
-                    </div>
-                </div>
-            </div>
+		if (errors.length > 0) {
+			return {
+				errors,
+				enteredValues: {
+					email,
+					password,
+					confirmPassword,
+					firstName,
+					lastName,
+					role,
+					terms,
+					acquisitionChannel,
+				},
+			};
+		}
 
-            <hr />
+		return { errors: null };
+	}
 
-            <div className="control-row">
-                <div className="control">
-                    <label htmlFor="first-name">First Name</label>
-                    <input type="text" id="first-name" name="first-name" />
-                </div>
+	const [formState, formAction] = useActionState(signupAction, {
+		errors: null,
+	});
 
-                <div className="control">
-                    <label htmlFor="last-name">Last Name</label>
-                    <input type="text" id="last-name" name="last-name" />
-                </div>
-            </div>
+	return (
+		<form action={formAction}>
+			<h2>Welcome on board!</h2>
+			<p>We just need a little bit of data from you to get you started 🚀</p>
 
-            <div className="control">
-                <label htmlFor="phone">What best describes your role?</label>
-                <select id="role" name="role">
-                    <option value="student">Student</option>
-                    <option value="teacher">Teacher</option>
-                    <option value="employee">Employee</option>
-                    <option value="founder">Founder</option>
-                    <option value="other">Other</option>
-                </select>
-            </div>
+			<div className="control">
+				<label htmlFor="email">Email</label>
+				{<input id="email" type="email" name="email" defaultValue={formState.enteredValues?.email} />}
+			</div>
 
-            <fieldset>
-                <legend>How did you find us?</legend>
-                <div className="control">
-                    <input
-                        type="checkbox"
-                        id="google"
-                        name="acquisition"
-                        value="google"
-                    />
-                    <label htmlFor="google">Google</label>
-                </div>
+			<div className="control-row">
+				<div className="control">
+					<label htmlFor="password">Password</label>
+					<input
+						id="password"
+						type="password"
+						name="password"
+						defaultValue={formState.enteredValues?.password}
+					/>
+				</div>
 
-                <div className="control">
-                    <input
-                        type="checkbox"
-                        id="friend"
-                        name="acquisition"
-                        value="friend"
-                    />
-                    <label htmlFor="friend">Referred by friend</label>
-                </div>
+				<div className="control">
+					<label htmlFor="confirm-password">Confirm Password</label>
+					<input
+						id="confirm-password"
+						type="password"
+						name="confirm-password"
+						defaultValue={formState.enteredValues?.confirmPassword}
+					/>
+					<div className="control-error"></div>
+				</div>
+			</div>
 
-                <div className="control">
-                    <input type="checkbox" id="other" name="acquisition" value="other" />
-                    <label htmlFor="other">Other</label>
-                </div>
-            </fieldset>
+			<hr />
 
-            <div className="control">
-                <label htmlFor="terms-and-conditions">
-                    <input type="checkbox" id="terms-and-conditions" name="terms" />I
-                    agree to the terms and conditions
-                </label>
-            </div>
+			<div className="control-row">
+				<div className="control">
+					<label htmlFor="first-name">First Name</label>
+					<input
+						type="text"
+						id="first-name"
+						name="first-name"
+						defaultValue={formState.enteredValues?.firstName}
+					/>
+				</div>
 
-            <p className="form-actions">
-                <button type="reset" className="button button-flat">
-                    Reset
-                </button>
-                <button type="submit" className="button">
-                    Sign up
-                </button>
-            </p>
-        </form>
-    );
+				<div className="control">
+					<label htmlFor="last-name">Last Name</label>
+					<input
+						type="text"
+						id="last-name"
+						name="last-name"
+						defaultValue={formState.enteredValues?.lastName}
+					/>
+				</div>
+			</div>
+
+			<div className="control">
+				<label htmlFor="phone">What best describes your role?</label>
+				<select id="role" name="role" defaultValue={formState.enteredValues?.role}>
+					<option value="student">Student</option>
+					<option value="teacher">Teacher</option>
+					<option value="employee">Employee</option>
+					<option value="founder">Founder</option>
+					<option value="other">Other</option>
+				</select>
+			</div>
+
+			<fieldset>
+				<legend>How did you find us?</legend>
+				<div className="control">
+					<input
+						type="checkbox"
+						id="google"
+						name="acquisition"
+						value="google"
+						defaultChecked={formState.enteredValues?.acquisitionChannel.includes('google')}
+					/>
+					<label htmlFor="google">Google</label>
+				</div>
+
+				<div className="control">
+					<input
+						type="checkbox"
+						id="friend"
+						name="acquisition"
+						value="friend"
+						defaultChecked={formState.enteredValues?.acquisitionChannel.includes('friend')}
+					/>
+					<label htmlFor="friend">Referred by friend</label>
+				</div>
+
+				<div className="control">
+					<input
+						type="checkbox"
+						id="other"
+						name="acquisition"
+						value="other"
+						defaultChecked={formState.enteredValues?.acquisitionChannel.includes('other')}
+					/>
+					<label htmlFor="other">Other</label>
+				</div>
+			</fieldset>
+
+			<div className="control">
+				<label htmlFor="terms-and-conditions">
+					<input type="checkbox" id="terms-and-conditions" name="terms" />I agree to the terms and
+					conditions
+				</label>
+			</div>
+
+			{formState.errors && (
+				<ul className="errors">
+					{formState.errors.map(error => (
+						<li key={error}>{error}</li>
+					))}
+				</ul>
+			)}
+
+			<p className="form-actions">
+				<button type="reset" className="button button-flat">
+					Reset
+				</button>
+				<button type="submit" className="button">
+					Sign up
+				</button>
+			</p>
+		</form>
+	);
 }
