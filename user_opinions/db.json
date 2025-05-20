@@ -1,0 +1,18 @@
+{
+  "opinions": [
+    {
+      "id": 1747749932154,
+      "votes": 6,
+      "userName": "Hiếu",
+      "title": "React ",
+      "body": "React fullstack"
+    },
+    {
+      "id": 1747749615059,
+      "votes": 0,
+      "userName": "Hiếu",
+      "title": "React ",
+      "body": "React React React "
+    }
+  ]
+}

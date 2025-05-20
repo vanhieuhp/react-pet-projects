@@ -23,7 +23,7 @@ Here's a list of all available projects:
 Before you begin, ensure you have the following installed:
 - Node.js (Latest LTS version recommended)
 - npm (comes with Node.js)
-
+- npm install --save-dev prettier eslint-config-prettier eslint-plugin-prettier
 ### Installation
 
 1. Clone the repository:
