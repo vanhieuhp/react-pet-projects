@@ -6,3 +6,8 @@ body {
   margin: 0;
   font-family: Inter, sans-serif;
 }
+
+.default-page {
+  text-align: center;
+  margin: 2rem;
+}

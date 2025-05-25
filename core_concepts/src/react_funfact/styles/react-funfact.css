@@ -1,4 +1,10 @@
-.funfact-container {
+#funfact-container {
+    height: 100vh;
+    margin: 20px;
+    gap: 20px;
+}
+
+.funfact-main {
     margin: 7px 7px 0 0;
     padding: 30px 25px;
     background: #21222A;
